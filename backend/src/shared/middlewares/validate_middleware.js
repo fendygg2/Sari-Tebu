@@ -8,7 +8,7 @@ export function validatePayload(schema) {
         const { value, error } = schema.validate(req.body);
         if (error) throw error;
 
-        res.body = value;
+        req.body = value;
         next();
     };
 }
@@ -19,7 +19,7 @@ export function validateQuery(schema) {
         const { value, error } = schema.validate(req.query);
         if (error) throw error;
 
-        res.validatedQuery = value;
+        req.validatedQuery = value;
         next();
     };
 }
