@@ -19,7 +19,6 @@ Backend ini berjalan di atas runtime Node.js dengan framework Express, beserta p
 - **MySQL** v8.4+
 - **Docker** 29+
 - Pastikan telah copy file `.env.example` jadi `.env` dan `.env.prod`
-- 
 
 ### Local Development
 1. **Install dependencies dan generate prisma client**
