@@ -1,9 +1,9 @@
 generator client {
-    provider = "prisma-client"          // Required
-    output   = "./generated/prisma"     // Required (letakkan generated/ relasi terhadap schema.prisma)
+    provider = "prisma-client"      // Required
+    output   = "./generated"        // Required (letakkan generated/ relasi terhadap schema.prisma)
 
-    importFileExtension = "ts"          // Setting importFileExtension = "ts" ensures the generated imports match what tsx expects
-                                        // Berdasarkan `https://www.prisma.io/docs/orm/prisma-schema/overview/generators#field-reference`
+    importFileExtension = "ts"      // Setting importFileExtension = "ts" ensures the generated imports match what tsx expects
+                                    // Berdasarkan `https://www.prisma.io/docs/orm/prisma-schema/overview/generators#field-reference`
 }
 
 datasource db {

@@ -1,4 +1,6 @@
-FROM node:lts-alpine3.23
+FROM node:26-alpine
+
+WORKDIR /home/node/app
 
 USER node
 
@@ -9,5 +11,3 @@ COPY --chown=node:node package.json package-lock.json ./
 RUN npm ci --omit=dev
 
 COPY --chown=node:node . .
-
-CMD ["sh", "-c", "npm run db:deploy && npm run prod"]
