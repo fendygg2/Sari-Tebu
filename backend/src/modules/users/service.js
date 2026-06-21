@@ -1,13 +1,12 @@
 import bcrypt from "bcrypt";
-import { nanoid } from "nanoid";
+import { nanoid, customAlphabet } from "nanoid";
 
 import { prisma } from "#/shared/database/index.js";
 import ClientError from "#/shared/exceptions/client_error.js";
 
-/**
- * @typedef {NonNullable<Awaited<ReturnType<typeof prisma.user.findUnique>>>} User
- * @typedef {Pick<User, "id" | "email_address" | "username" | "created_at" | "updated_at">} PublicUserField
- */
+const generateEmailVerificationCode = () => {
+    return customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 8)();
+};
 
 const publicUserField = {
     id: true,
@@ -17,17 +16,8 @@ const publicUserField = {
     updated_at: true,
 };
 
-const BCRYPT_ROUNDS = 12;
-
-/**
- * Membuat user baru
- * @param {{ emailAddress: string, username: string, password: string }} payload
- * @returns {Promise<PublicUserField>}
- * @throws {ClientError}
- */
-export async function createUser(payload) {
-    const { emailAddress, username, password } = payload;
-    const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
+export async function createUser({ emailAddress, username, password }) {
+    const hashedPassword = await bcrypt.hash(password);
     try {
         return await prisma.user.create({
             data: {

@@ -36,24 +36,8 @@ docker compose -f compose.dev.yaml up --build -d
 npm run dev
 ```
 
-## Usage
-
-| Command | Usage |
-|:--------|:------|
-| setup   | Menginstal dependencies dan generate Prisma Client |
-| start | menjalankan aplikasi dalam prodcution stage |
-| dev   | menjalankan aplikasi dalam development stage |
-| test  | Menjalankan testing postman collection |
-| db:deploy | Menerapkan migrasi yang belum dijalankan ke database dan generate Prisma Client |
-| db:create | Membuat file migration berdasarkan perubahan pada schema.prisma |
-| db:reset  | Menghapus semua tabel, membuat ulang database |
-| lint     | memeriksa kualitas kode agar tidak broke kualitsas standar javascript |
-| lint:fix | perbaiki kode yang dinyatakan bermasalah oleh linter |
-| fmt       | format kode |
-| fmt:check | periksa format kode |
-
 > [!NOTE]  
-> Usage `migrate:create` dikarenakan merupakan `prisma migrate dev --name` kamu perlu menambahkan `--` agar npm dapat menerima argumen tsb.
+> Credential untuk memasuki adminer dengan kredential: server=database, username=roo, password=root, database=
 
 ## Deployment
 

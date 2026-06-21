@@ -1,5 +1,5 @@
 import app from "./app.js";
-import ANSI from "./shared/utils/ansi.js";
+import "dotenv/config";
 
 async function init() {
     const host = process.env.HOST;
@@ -8,8 +8,9 @@ async function init() {
     app.listen(port, host, function () {
         console.log(
             [
-                `  ${ANSI.BRIGHTYELLOW}Server running on ${ANSI.BRIGHTWHITE}[http://${host}:${port}]${ANSI.RESET}.\n`,
-                `  ${ANSI.BRIGHTYELLOW}Press ${ANSI.BRIGHTWHITE}<Ctrl+C>${ANSI.RESET}${ANSI.BRIGHTYELLOW} to stop the server${ANSI.RESET}\n`,
+                `  \x1b[93mServer running on \x1b[97m[http://${host}:${port}]\x1b[0m.`,
+                `  \x1b[93mPress \x1b[97m<Ctrl+C>\x1b[0m\x1b[93m to stop the server\x1b[0m`,
+                ``,
             ].join("\n"),
         );
     });

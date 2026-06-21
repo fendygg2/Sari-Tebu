@@ -11,101 +11,100 @@ datasource db {
 }
 
 model User {
-    id            String        @id @db.VarChar(32)
-    email_address String        @unique
-    username      String
-    password_hash String        @db.VarChar(255)
-    created_at    DateTime      @default(now())
-    updated_at    DateTime      @updatedAt
-    
+    id                      String                  @id             
+    email_address           String                  @unique
+    username                String              
+    password_hash           Bytes                   @db.Blob
+    created_at              DateTime                @default(now())
+    updated_at              DateTime                @updatedAt
+
+    auth_sessions           AuthSession[]
+    password_reset_sessions PasswordResetSession[]
     carts                   Cart[]
     transactions            Transaction[]
-    auth_sessions           AuthSession[]
-    // password_reset_sessions PasswordResetSession[]
 
     @@map("users")
 }
 
 model AuthSession {
-    id              String   @id @db.VarChar(32)
-    user_id         String   @db.VarChar(32)
-    refresh_token   String   @db.VarChar(64)
-    created_at      DateTime @default(now())
-    expires_at      DateTime
-    user            User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-    // email_address_update_sessions   EmailAddressUpdateSession[]
-    // password_update_sessions        PasswordUpdateSession[]
-    // account_deletion_sessions       AccountDeletionSession[]
+    id                            String                       @id             
+    user_id                       String                                       
+    session_secret_hash           Bytes                        @db.Blob
+    created_at                    DateTime                     @default(now())
+    expires_at                    DateTime
+    account_deletion_sessions     accountDeletionSession[]
+    email_address_update_sessions emailAddresssUpdateSession[]
+    password_update_sessions      passwordUpdateSession[]
+    user                          User                         @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
     @@map("auth_sessions")
+    @@index([user_id])
 }
 
-// model SignupSession {
-//     id                              String   @id @db.VarChar(32)
-//     secret_hash                     String   @db.VarChar(255)
-//     email_address                   String   @db.VarChar(255)
-//     email_address_verification_code String   @db.VarChar(255)
-//     email_address_verified          Boolean  @default(false)
-//     created_at                      DateTime @default(now())
+model PasswordResetSession {
+    id                  String   @id      
+    user_id             String            
+    session_secret_hash Bytes    @db.Blob
+    email_code_hash     Bytes    @db.Blob
+    is_email_verified   Boolean
+    created_at          DateTime @default(now())
+    user                User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-//     @@map("signup_sessions")
-// }
+    @@map("password_reset_sessions")
+    @@index([user_id])
+}
 
-// model EmailAddressUpdateSession {
-//     id                              String      @id @db.VarChar(32)
-//     auth_session_id                 String      @db.VarChar(32)
-//     secret_hash                     String      @db.VarChar(255)
-//     user_identity_verified          Boolean     @default(false)
-//     new_email_address               String?     @db.VarChar(255)
-//     new_email_address_verification_code String? @db.VarChar(255)
-//     created_at                      DateTime    @default(now())
-//     auth_session                    AuthSession @relation(fields: [auth_session_id], references: [id], onDelete: Cascade)
+model accountDeletionSession {
+    id                  String      @id      
+    auth_session_id     String                
+    session_secret_hash Bytes       @db.Blob
+    is_email_verified   Boolean
+    created_at          DateTime    @default(now())
+    authSession         AuthSession @relation(fields: [auth_session_id], references: [id], onDelete: Cascade)
 
-//     @@index([auth_session_id])
-//     @@map("email_address_update_sessions")
-// }
+    @@map("account_deletion_sessions")
+    @@index([auth_session_id])
+}
 
-// model PasswordUpdateSession {
-//     id                     String      @id @db.VarChar(32)
-//     auth_session_id        String      @db.VarChar(32)
-//     secret_hash            String      @db.VarChar(255)
-//     user_identity_verified Boolean     @default(false)
-//     created_at             DateTime    @default(now())
-//     auth_session           AuthSession @relation(fields: [auth_session_id], references: [id], onDelete: Cascade)
+model emailAddresssUpdateSession {
+    id                  String      @id      
+    auth_session_id     String               
+    session_secret_hash Bytes       @db.Blob
+    is_email_verified   Boolean
+    new_email_address   String
+    email_code_hash     Bytes
+    created_at          DateTime    @default(now())
+    authSession         AuthSession @relation(fields: [auth_session_id], references: [id], onDelete: Cascade)
 
-//     @@index([auth_session_id])
-//     @@map("password_update_sessions")
-// }
+    @@map("email_address_update_sessions")
+    @@index([auth_session_id])
+}
 
-// model AccountDeletionSession {
-//     id                     String      @id @db.VarChar(32)
-//     auth_session_id        String      @db.VarChar(32)
-//     secret_hash            String      @db.VarChar(255)
-//     user_identity_verified Boolean     @default(false)
-//     created_at             DateTime    @default(now())
-//     auth_session           AuthSession @relation(fields: [auth_session_id], references: [id], onDelete: Cascade)
+model passwordUpdateSession {
+    id                  String      @id      
+    auth_session_id     String                
+    session_secret_hash Bytes       @db.Blob
+    is_email_verified   Boolean
+    created_at          DateTime    @default(now())
+    authSession         AuthSession @relation(fields: [auth_session_id], references: [id], onDelete: Cascade)
 
-//     @@index([auth_session_id])
-//     @@map("account_deletion_sessions")
-// }
+    @@map("password_update_sessions")
+    @@index([auth_session_id])
+}
 
-// model PasswordResetSession {
-//     id                     String   @id @db.VarChar(32)
-//     user_id                String   @db.VarChar(32)
-//     secret_hash            String   @db.VarChar(255)
-//     email_code_hash        String   @db.VarChar(255)
-//     email_code_salt        String   @db.VarChar(255)
-//     user_identity_verified Boolean  @default(false)
-//     created_at             DateTime @default(now())
-//     user                   User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+model SignupSession {
+    id                  String   @id      
+    session_secret_hash Bytes    @db.Blob
+    email_address       String
+    email_code_hash     String
+    is_email_verified   Boolean
+    created_at          DateTime @default(now())
 
-//     @@index([user_id])
-//     @@map("password_reset_sessions")
-// }
+    @@map("signup_sessions")
+}
 
 model Product {
-    id                String            @id @db.VarChar(32)
+    id                String            @id 
     name              String            @unique
     price             Int
     stock             Int
@@ -118,20 +117,20 @@ model Product {
 }
 
 model Cart {
-    id         String     @id             @db.VarChar(32)
-    user_id    String                     @db.VarChar(32)
+    id         String     @id             
+    user_id    String                     
     created_at DateTime   @default(now())
     updated_at DateTime   @updatedAt
     items      CartItem[]
     user       User       @relation(fields: [user_id], references: [id])
 
-    @@index([user_id])
     @@map("carts")
+    @@index([user_id])
 }
 
 model CartItem {
-    cart_id    String  @db.VarChar(32)
-    product_id String  @db.VarChar(32)
+    cart_id    String  
+    product_id String  
     quantity   Int
 
     cart       Cart    @relation(fields: [cart_id], references: [id], onDelete: Cascade)
@@ -142,8 +141,8 @@ model CartItem {
 }
 
 model Transaction {
-    id         String            @id @db.VarChar(32)
-    user_id    String            @db.VarChar(32)
+    id         String            @id 
+    user_id    String            
     total      Int
     created_at DateTime          @default(now())
     updated_at DateTime          @updatedAt
@@ -155,8 +154,8 @@ model Transaction {
 }
 
 model TransactionItem {
-    transaction_id String      @db.VarChar(32)
-    product_id     String      @db.VarChar(32)
+    transaction_id String      
+    product_id     String      
     quantity       Int
     price_at_time  Int
     product        Product     @relation(fields: [product_id], references: [id])

@@ -1,26 +1,5 @@
 import * as UserService from "./service.js";
 
-/**
- * @typedef {import('express').Request & {
- *     validatedBody  : any,
- *     validatedQuery : any,
- *     validatedParams: any
- * }} Request
- * @typedef {Request & {
- *     user: {
- *         sub: string,
- *         sid: string
- *     }
- * }} RequestWithAuth
- * @typedef {import('express').Response} Response
- */
-
-/**
- * @param {Request} req
- * @param {Response} res
- * @type {import("express").RequestHandler}
- * @returns {Promise<void>}
- */
 export async function createUser(req, res) {
     const user = await UserService.createUser(req.validatedBody);
     res.status(201).json({

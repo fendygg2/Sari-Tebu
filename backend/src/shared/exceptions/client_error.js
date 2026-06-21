@@ -17,7 +17,7 @@ export default class ClientError extends Error {
 
     /**
      * **400** (Bad Request)
-     * @param {string} [message="Bad Request"]
+     * @param {string}
      * @returns {ClientError}
      */
     static badRequest(message = "Bad Request") {
@@ -26,7 +26,7 @@ export default class ClientError extends Error {
 
     /**
      * **401** (Unauthorized)
-     * @param {string} [message="Unauthorized"]
+     * @param {string}
      * @returns {ClientError}
      */
     static unauthorized(message = "Unauthorized") {
@@ -35,7 +35,7 @@ export default class ClientError extends Error {
 
     /**
      * **403** (Forbidden)
-     * @param {string} [message="Forbidden"]
+     * @param {string}
      * @returns {ClientError}
      */
     static forbidden(message = "Forbidden") {
@@ -44,7 +44,7 @@ export default class ClientError extends Error {
 
     /**
      * **404** (Not Found)
-     * @param {string} [message="Not Found"]
+     * @param {string}
      * @returns {ClientError}
      */
     static notFound(message = "Not Found") {
@@ -53,7 +53,7 @@ export default class ClientError extends Error {
 
     /**
      * **409** (Conflict)
-     * @param {string} [message="Conflict"]
+     * @param {string}
      * @returns {ClientError}
      */
     static conflict(message = "Conflict") {
@@ -62,7 +62,7 @@ export default class ClientError extends Error {
 
     /**
      * **415** (Unsupported Media Type)
-     * @param {string} [message="Unsupported Media Type"]
+     * @param {string}
      * @returns {ClientError}
      */
     static unsupportedMediaType(message = "Unsupported Media Type") {
@@ -71,7 +71,7 @@ export default class ClientError extends Error {
 
     /**
      * **429** (Too Many Requests)
-     * @param {string} [message="Too Many Requests"]
+     * @param {string}
      * @returns {ClientError}
      */
     static tooManyRequests(message = "Too Many Requests") {

@@ -2,9 +2,9 @@
 
 export default class RateLimit {
     /**
-     * @param {number} capacity - Jumlah maksimum IP unik yang dapat di track
-     * @param {number} bucketCapacity - Jumlah maksimum token tiap bucket
-     * @param {number} msPerToken - Berapa millisecond untuk replenish satu token
+     * @param {number} capacity Jumlah maksimum IP unik yang dapat di track
+     * @param {number} bucketCapacity Jumlah maksimum token tiap bucket
+     * @param {number} msPerToken Berapa millisecond untuk replenish satu token
      */
     constructor(capacity, bucketCapacity, msPerToken) {
         this.capacity = capacity;
@@ -56,7 +56,11 @@ export default class RateLimit {
             this.newestBucket = newBucket;
             this.oldestBucket = this.oldestBucket ?? newBucket;
 
-            return true;
+            return {
+                allowed: true,
+                remaining: this.bucketCapacity--,
+                resetAt: this.msPerToken
+            }
         }
 
         const credit = (now - bucket.lastTime) / this.msPerToken;
@@ -85,11 +89,23 @@ export default class RateLimit {
             this.oldestBucket = this.oldestBucket ?? bucket;
         }
 
+        const resetAt = Math.floor(bucket.lastTime + this.msPerToken);
+
         // Kalau bucket kosong, berarti gagal i.e. block IP ini
-        if (bucket.count < 1) return false;
+        if (bucket.count < 1)  {
+            return {
+                allowed: false,
+                remaining: 0,
+                resetAt: resetAt
+            }
+        }
 
         bucket.count--;
-    	return true
+    	return {
+            allowed: true,
+            remaining: Math.floor(bucket.count),
+            resetAt: resetAt
+        }
     }
 
     /**

@@ -1,13 +1,13 @@
 -- CreateTable
 CREATE TABLE `users` (
     `id` VARCHAR(32) NOT NULL,
+    `email_address` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
-    `password_hash` VARCHAR(255) NOT NULL,
-    `password_salt` VARCHAR(255) NOT NULL,
+    `password_hash` BLOB NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `users_username_key`(`username`),
+    UNIQUE INDEX `users_email_address_key`(`email_address`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -15,10 +15,74 @@ CREATE TABLE `users` (
 CREATE TABLE `auth_sessions` (
     `id` VARCHAR(32) NOT NULL,
     `user_id` VARCHAR(32) NOT NULL,
-    `refresh_token` VARCHAR(255) NOT NULL,
+    `session_secret` BLOB NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires_at` DATETIME(3) NOT NULL,
 
     INDEX `auth_sessions_user_id_idx`(`user_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `password_reset_sessions` (
+    `id` VARCHAR(32) NOT NULL,
+    `user_id` VARCHAR(32) NOT NULL,
+    `session_secret` BLOB NOT NULL,
+    `email_code_hash` BLOB NOT NULL,
+    `is_email_verified` BOOLEAN NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `password_reset_sessions_user_id_idx`(`user_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `account_deletion_sessions` (
+    `id` VARCHAR(32) NOT NULL,
+    `auth_session_id` VARCHAR(32) NOT NULL,
+    `session_secret` BLOB NOT NULL,
+    `is_email_verified` BOOLEAN NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `account_deletion_sessions_auth_session_id_idx`(`auth_session_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `email_address_update_sessions` (
+    `id` VARCHAR(32) NOT NULL,
+    `auth_session_id` VARCHAR(32) NOT NULL,
+    `session_secret` BLOB NOT NULL,
+    `is_email_verified` BOOLEAN NOT NULL,
+    `new_email_address` VARCHAR(191) NOT NULL,
+    `email_code_hash` LONGBLOB NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `email_address_update_sessions_auth_session_id_idx`(`auth_session_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `password_update_sessions` (
+    `id` VARCHAR(32) NOT NULL,
+    `auth_session_id` VARCHAR(32) NOT NULL,
+    `session_secret` BLOB NOT NULL,
+    `is_email_verified` BOOLEAN NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    INDEX `password_update_sessions_auth_session_id_idx`(`auth_session_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `signup_sessions` (
+    `id` VARCHAR(32) NOT NULL,
+    `session_secret` BLOB NOT NULL,
+    `email_address` VARCHAR(191) NOT NULL,
+    `email_code_hash` VARCHAR(191) NOT NULL,
+    `is_email_verified` BOOLEAN NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -42,6 +106,7 @@ CREATE TABLE `carts` (
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
+    INDEX `carts_user_id_idx`(`user_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -78,6 +143,18 @@ CREATE TABLE `transaction_items` (
 
 -- AddForeignKey
 ALTER TABLE `auth_sessions` ADD CONSTRAINT `auth_sessions_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `password_reset_sessions` ADD CONSTRAINT `password_reset_sessions_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `account_deletion_sessions` ADD CONSTRAINT `account_deletion_sessions_auth_session_id_fkey` FOREIGN KEY (`auth_session_id`) REFERENCES `auth_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `email_address_update_sessions` ADD CONSTRAINT `email_address_update_sessions_auth_session_id_fkey` FOREIGN KEY (`auth_session_id`) REFERENCES `auth_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `password_update_sessions` ADD CONSTRAINT `password_update_sessions_auth_session_id_fkey` FOREIGN KEY (`auth_session_id`) REFERENCES `auth_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `carts` ADD CONSTRAINT `carts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

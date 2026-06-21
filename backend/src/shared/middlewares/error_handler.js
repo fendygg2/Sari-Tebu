@@ -1,13 +1,13 @@
 import ClientError from "#/shared/exceptions/client_error.js";
 
-const bodyParserMessages = new Map();
-bodyParserMessages.set("entity.parse.failed", "Invalid JSON body");
-bodyParserMessages.set("entity.too.large", "Request body too large");
-bodyParserMessages.set("charset.unsupported", "Unsupported charset");
-bodyParserMessages.set("encoding.unsupported", "Unsupported encoding");
+const bodyParserMessages = {
+    "entity.parse.failed": "Invalid JSON body",
+    "entity.too.large": "Request body too large",
+    "charset.unsupported": "Unsupported charset",
+    "encoding.unsupported": "Unsupported encoding",
+};
 
 export default function requireErrorHandler() {
-    // @ts-ignore
     return function (err, req, res) {
         if (err instanceof ClientError) {
             res.status(err.statusCode).json({
@@ -25,7 +25,7 @@ export default function requireErrorHandler() {
             return;
         }
 
-        const bodyParserMessage = bodyParserMessages.get(err.type);
+        const bodyParserMessage = bodyParserMessages[err.type];
         if (bodyParserMessage) {
             res.status(err.statusCode).json({
                 status: "fail",
@@ -34,7 +34,7 @@ export default function requireErrorHandler() {
             return;
         }
 
-        // TODO: add better error logging
+        // TODO(AELBERTH): add better error logging
         console.error(err);
 
         res.status(err.statusCode || 500).json({

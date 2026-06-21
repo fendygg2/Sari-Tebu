@@ -10,7 +10,19 @@ import RateLimit from "#/shared/lib/rate_limit.js";
 export default function requireRateLimit(capacity, bucketCapacity, msPerToken) {
     const rateLimit = new RateLimit(capacity, bucketCapacity, msPerToken);
     return function (req, res, next) {
-        if (!rateLimit.consume(req.ip)) throw ClientError.tooManyRequests();
+        const { allowed, remaining, resetAt } = rateLimit.consume(req.ip);
+
+        res.set({
+            "RateLimit-Limit": bucketCapacity,
+            "RateLimit-Remaining": remaining,
+            "RateLimit-Reset": Math.floor(resetAt / 1000),
+        });
+
+        if (!allowed) {
+            res.set("Retry-after", Math.ceil(msPerToken / 1000));
+            throw ClientError.tooManyRequests();
+        }
+
         next();
     };
 }

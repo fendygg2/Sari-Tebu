@@ -1,19 +1,21 @@
-export const ValidationType = Object.freeze({
-    PAYLOAD: "body",
-    BODY: "body",
-    QUERY: "query",
-    PARAMS: "params",
-});
-
 /**
- * @param {string} type
+ * Coba validasikan request sesuai dengan skema Joi dan attach value
+ * yang telah divalidasikan ke req (misalnya req.validatedBody, req.validatedQuery).
+ *
+ * @param {"body" | "query" | "params"} type
  * @param {import("joi").ObjectSchema} schema
  */
-export default function requireValidation(
-    type = ValidationType.PAYLOAD,
-    schema,
-) {
-    //@ts-ignore
+export default function requireValidation(type, schema) {
+    if (!["body", "query", "params"].includes(type)) {
+        throw new Error(
+            `Invalid validation type '${type}'. Harus berupa salah satu dari:
+    - body
+    - query
+    - params
+`,
+        );
+    }
+
     return function (req, res, next) {
         const { value, error } = schema.validate(req[type], {
             abortEarly: false,
