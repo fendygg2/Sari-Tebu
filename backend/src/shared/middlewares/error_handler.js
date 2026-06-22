@@ -8,7 +8,8 @@ const bodyParserMessages = {
 };
 
 export default function requireErrorHandler() {
-    return function (err, req, res) {
+    // oxlint-disable-next-line no-unused-vars
+    return function (err, req, res, next) {
         if (err instanceof ClientError) {
             res.status(err.statusCode).json({
                 status: "fail",
