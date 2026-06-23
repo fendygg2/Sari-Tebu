@@ -18,4 +18,5 @@ echo "$(date --utc +%FT%TZ): Scaling old server down..."
 docker container rm -f $OLD_CONTAINER
 docker compose up -d --no-deps --scale server=1 --no-recreate server
 echo "$(date --utc +%FT%TZ): Reloading caddy..."
+sudo cp $PROJECT_DIR/deployment/Caddyfile /etc/caddy/Caddyfile
 sudo systemctl reload caddy

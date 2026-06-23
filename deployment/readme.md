@@ -28,6 +28,7 @@ sudo dnf install caddy
 Tambah baris ini ke `/etc/sudoers.d/caddy-reload`:
 ```sh
 <user> ALL=(ALL) NOPASSWD: /bin/systemctl reload caddy
+<user> ALL=(ALL) NOPASSWD: /bin/cp /home/akunsialbert/Projects/Sari-Tebu/deployment/Caddyfile /etc/caddy/Caddyfile
 ```
 
 Dan pastikan Caddyfile merupakan sehingga semua perubahan dari operasi git akan auto update di `/etc/caddy/Caddyfile`

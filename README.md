@@ -1,25 +1,16 @@
 # Sari Tebu
 
 > [!IMPORTANT]
-> Proyek ini dibuat untuk tujuan pembelajaran, walaupun disini kami berusaha untuk mengikuti _industry standard_, kami merekomendasikan
-> anda untuk tidak menggunakan proyek ini sebagai basis produksi atau membawakan ekspektasi berlebihan terhadap proyek ini.
+> Proyek ini dibuat untuk tujuan pembelajaran, walaupun disini kami berusaha untuk mengikuti industry standard, kami merekomendasikan anda untuk tidak menggunakan proyek ini sebagai basis untuk production atau membawakan ekspektasi berlebihan terhadap proyek ini.
 
-Sari Tebu merupakan aplikasi POS (point of sale) berbasis web. Frontend akan di render client-side (CSR) dikarenakan 
-ini merupakan aplikasi dashboard, dimana SEO (Search Engine Optimization) tidak berperan penting. Disini kami menggunakan framwork React.
+Sari Tebu merupakan aplikasi POS (*Point of Sale*) berbasis web. Frontend akan di render sisi klien (*Client-Side Rendering* / CSR) dikarenakan ini merupakan aplikasi *dashboard*, di mana SEO (*Search Engine Optimization*) tidak berperan penting.
 
-Backend merupakan API menggunakan Node runtime dan Express Framework
-
-<!-- TODO: Tambah detail mengenai deployment 
+<!-- TODO: Tambah detail mengenai frontend dan deployment 
  -->
 
 Instruksi untuk backend [readme.md](./backend/readme.md) <br />
 Instruksi untuk frontend [readme.md](./frontend/readme.md) <br />
 Video demo proyek [Video demo proyek] (https://drive.google.com/file/d/1D9WIMK-e33bKClgW-uAOfCWOIG8EgrH2/view?usp=drivesdk)
-
-Untuk menjalankan program, tolong ketikan perintah dibawah ini pada terminal pilihan anda
-```pwsh
-.\run.cmd
-```
 
 <!-- NOTE: Tambahkan sumber-sumber lainnya yang terkait dengan proyek disini 
  -->
