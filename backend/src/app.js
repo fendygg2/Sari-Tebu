@@ -25,11 +25,11 @@ app.use(
 app.use(express.json({ limit: "250kb" }));
 app.use(express.urlencoded({ extended: true, limit: "250kb" }));
 
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authenticationRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/carts", cartRoutes);
-app.use("/api/transactions", transactionRoutes);
+app.use("/users", userRoutes);
+app.use("/auth", authenticationRoutes);
+app.use("/products", productRoutes);
+app.use("/carts", cartRoutes);
+app.use("/transactions", transactionRoutes);
 
 // NOTE: Error middleware harus berada pada urutan terakhir
 app.use(requireErrorHandler());

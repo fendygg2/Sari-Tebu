@@ -21,11 +21,22 @@ services:
             dockerfile: Dockerfile
         env_file:
             - .env.prod
-        ports:
-            - "${HOST}${PORT:-8080}:${PORT:-8080}"
+        expose:
+            - "${PORT:-8080}"
         depends_on:
             database:
                 condition: service_healthy
+    
+    caddy:
+        image: caddy:alpine
+        container_name: sari-tebu-reverse-proxy
+        ports:
+            - "80:80"
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile:ro
+        depends_on:
+            - server
+        restart: always
 
 volumes:
     mysql_data:
