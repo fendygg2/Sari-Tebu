@@ -18,31 +18,8 @@ Server kami sekarang ini merupakan komputer pribadi di Medan, Sumatera utara den
 > [!WARNING]
 > Tiap kali mati lampu (cukup sering di pulau sumatera), maka server down namun akan restart dalam waktu secepatnya.
 
-Dikarekan internet server ini berada pada ISP dibawah CGNAT, maka kami menggunakan cloudflare tunnel. dan Caddy sebagai reverse-proxy
+Dikarekan internet server ini berada pada ISP dibawah CGNAT, maka kami menggunakan cloudflare tunnel. dan Cloudflare sebagai reverse-proxy
 yang mengaitkan container-container ke port yang dibutuhkan (:443, :80).
-
-```sh
-sudo dnf install caddy
-```
-
-Tambah baris ini ke `/etc/sudoers.d/caddy-reload`:
-```sh
-<user> ALL=(ALL) NOPASSWD: /bin/systemctl reload caddy
-<user> ALL=(ALL) NOPASSWD: /bin/cp /home/akunsialbert/Projects/Sari-Tebu/deployment/Caddyfile /etc/caddy/Caddyfile
-```
-
-Dan pastikan Caddyfile merupakan sehingga semua perubahan dari operasi git akan auto update di `/etc/caddy/Caddyfile`
-```sh
-sudo rm /etc/caddy/Caddyfile
-sudo ln -s /home/<user>/Sari-Tebu/deployment/Caddyfile /etc/caddy/Caddyfile
-```
-
-Command-command yang terkait caddy yang useful untuk diingat
-```sh
-caddy validate --config /etc/caddy/Caddyfile    # Cek error pada Caddyfile
-sudo systemctl reload caddy                     # Apply Perubahan
-sudo journalctl -u caddy -f                     # Tail caddy logs
-```
 
 Dan dimana kami membuat cron job, yang akan mengeksekusikan script `./cd.sh` tiap menit, yang akan mengsinkron kan HEAD pada main remote branch
 kepada production repo.
