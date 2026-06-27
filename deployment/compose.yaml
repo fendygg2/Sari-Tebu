@@ -1,18 +1,5 @@
 name: sari-tebu-production
 services:
-    migrate:
-        build:
-            context: ../backend
-            dockerfile: Dockerfile
-        command: sh -c "npx prisma migrate deploy"
-        env_file:
-            - ../backend/.env.prod
-        depends_on:
-            database:
-                condition: service_healthy
-        restart: on-failure
-
-
     database:
         image: mysql:8.4
         container_name: sari-tebu-database
