@@ -6,7 +6,7 @@
 # di-ignore dan akan di run pada menit berikutnya
 
 DEPLOYMENT_DIR="/home/akunsialbert/Projects/Sari-Tebu/deployment"
-LOCK_FILE="$DEPLOY_DIR/deployment.lock"
-LOG_FILE="$DEPLOY_DIR/deployment.log"
+LOCK_FILE="$DEPLOYMENT_DIR/deployment.lock"
+LOG_FILE="$DEPLOYMENT_DIR/deployment.log"
 cd $DEPLOYMENT_DIR
 flock -n $LOCK_FILE $DEPLOYMENT_DIR/deploy-if-changed.sh >> $LOG_FILE 2>&1
