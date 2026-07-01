@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import requireAuthentication from "../../shared/middlewares/authentication.js";
-import requireValidation from "../../shared/middlewares/validation.js";
+import requireAuthSession from "#/shared/middlewares/auth_session.js";
+import requireValidation from "#/shared/middlewares/validation.js";
 
 import {
     getProduct,
@@ -21,26 +21,26 @@ import {
 const routes = Router();
 
 routes.get("/", [
-    requireAuthentication(),
+    requireAuthSession(),
     requireValidation("query", getProductsQuerySchema),
     getProducts,
 ]);
-routes.get("/:id", [requireAuthentication(), getProduct]);
+routes.get("/:id", [requireAuthSession(), getProduct]);
 routes.post("/", [
-    requireAuthentication(),
+    requireAuthSession(),
     requireValidation("body", createProductSchema),
     createProduct,
 ]);
 routes.put("/:id", [
-    requireAuthentication(),
+    requireAuthSession(),
     requireValidation("body", updateProductSchema),
     updateProduct,
 ]);
 routes.patch("/:id", [
-    requireAuthentication(),
+    requireAuthSession(),
     requireValidation("body", editProductSchema),
     editProduct,
 ]);
-routes.delete("/:id", [requireAuthentication(), deleteProduct]);
+routes.delete("/:id", [requireAuthSession(), deleteProduct]);
 
 export default routes;

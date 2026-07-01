@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import requireAuthentication from "../../shared/middlewares/authentication.js";
-import requireRateLimit from "../../shared/middlewares/rate_limit.js";
-import requireValidation from "../../shared/middlewares/validation.js";
+import requireAuthSession from "#/shared/middlewares/auth_session.js";
+import requireRateLimit from "#/shared/middlewares/rate_limit.js";
+import requireValidation from "#/shared/middlewares/validation.js";
 
 import {
     createUser,
@@ -23,21 +23,21 @@ routes.post("/", [
 ]);
 
 // routes.get("/", [
-//     requireAuthentication(),
+//     requireAuthSession(),
 //     requireValidation("body", searchUserSchema),
 //     getUsers,
 // ]);
-// routes.get("/:id", [requireAuthentication(), getUserById]);
+// routes.get("/:id", [requireAuthSession(), getUserById]);
 // routes.put("/:id", [
-//     requireAuthentication(),
+//     requireAuthSession(),
 //     requireValidation("body", updateUserSchema),
 //     updateUser,
 // ]);
 // routes.patch("/:id", [
-//     requireAuthentication(),
+//     requireAuthSession(),
 //     requireValidation("body", editUserSchema),
 //     editUser,
 // ]);
-// routes.delete("/:id", [requireAuthentication(), deleteUser]);
+// routes.delete("/:id", [requireAuthSession(), deleteUser]);
 
 export default routes;

@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import requireRateLimit from "../../shared/middlewares/rate_limit.js";
-import requireValidation from "../../shared/middlewares/validation.js";
-import requireSignupSession from "../../shared/middlewares/signup_session.js";
+import requireRateLimit from "#/shared/middlewares/rate_limit.js";
+import requireValidation from "#/shared/middlewares/validation.js";
+import requireSignupSession from "#/shared/middlewares/signup_session.js";
 
 import {
     createSignupSession,

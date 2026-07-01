@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 
-import { prisma } from "../../shared/database/index.js";
-import ClientError from "../../shared/exceptions/client_error.js";
+import { prisma } from "#/shared/database/index.js";
+import ClientError from "#/shared/exceptions/client_error.js";
 
 export async function createCart(userId) {
     return prisma.cart.create({

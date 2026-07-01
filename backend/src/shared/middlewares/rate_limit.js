@@ -1,5 +1,5 @@
-import ClientError from "../../shared/exceptions/client_error.js";
-import RateLimit from "../../shared/lib/rate_limit.js";
+import ClientError from "#/shared/exceptions/client_error.js";
+import RateLimit from "#/shared/lib/rate_limit.js";
 
 /**
  * Rate-limit request berdasarkan IP

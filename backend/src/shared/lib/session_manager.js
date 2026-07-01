@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 
-import ClientError from "../exceptions/client_error.js";
+import ClientError from "#/shared/exceptions/client_error.js";
 
 export function generateSessionSecret() {
     return randomBytes(32);

@@ -1,4 +1,4 @@
-import ClientError from "../../shared/exceptions/client_error.js";
+import ClientError from "#/shared/exceptions/client_error.js";
 
 const bodyParserMessages = {
     "entity.parse.failed": "Invalid JSON body",

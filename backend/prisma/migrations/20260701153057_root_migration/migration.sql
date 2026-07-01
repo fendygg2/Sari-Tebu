@@ -31,6 +31,7 @@ CREATE TABLE `password_reset_sessions` (
     `email_code_hash` BLOB NOT NULL,
     `is_email_verified` BOOLEAN NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires_at` DATETIME(3) NOT NULL,
 
     INDEX `password_reset_sessions_user_id_idx`(`user_id`),
     PRIMARY KEY (`id`)
@@ -43,6 +44,7 @@ CREATE TABLE `account_deletion_sessions` (
     `session_secret_hash` BLOB NOT NULL,
     `is_email_verified` BOOLEAN NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires_at` DATETIME(3) NOT NULL,
 
     INDEX `account_deletion_sessions_auth_session_id_idx`(`auth_session_id`),
     PRIMARY KEY (`id`)
@@ -57,6 +59,7 @@ CREATE TABLE `email_address_update_sessions` (
     `new_email_address` VARCHAR(191) NOT NULL,
     `email_code_hash` LONGBLOB NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires_at` DATETIME(3) NOT NULL,
 
     INDEX `email_address_update_sessions_auth_session_id_idx`(`auth_session_id`),
     PRIMARY KEY (`id`)
@@ -69,6 +72,7 @@ CREATE TABLE `password_update_sessions` (
     `session_secret_hash` BLOB NOT NULL,
     `is_email_verified` BOOLEAN NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires_at` DATETIME(3) NOT NULL,
 
     INDEX `password_update_sessions_auth_session_id_idx`(`auth_session_id`),
     PRIMARY KEY (`id`)
@@ -82,6 +86,7 @@ CREATE TABLE `signup_sessions` (
     `email_code_hash` VARCHAR(191) NOT NULL,
     `is_email_verified` BOOLEAN NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `expires_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

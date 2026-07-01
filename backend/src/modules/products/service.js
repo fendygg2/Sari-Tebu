@@ -1,8 +1,8 @@
 // products/service.js
 import { nanoid } from "nanoid";
 
-import { prisma } from "../../shared/database/index.js";
-import ClientError from "../../shared/exceptions/client_error.js";
+import { prisma } from "#/shared/database/index.js";
+import ClientError from "#/shared/exceptions/client_error.js";
 
 /** @typedef {NonNullable<Awaited<ReturnType<typeof prisma.product.findUnique>>>} Product */
 

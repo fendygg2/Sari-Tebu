@@ -24,8 +24,6 @@ export async function createSignupSession(req, res) {
 
 export async function verifyEmailAddress(req, res) {
     const { code } = req.validatedBody;
-    console.log(`session: ${req.signupSession}`);
-    console.log(`code: ${code}`);
 
     await SignupSessionService.verifyEmailAddress(req.signupSession, code);
     res.status(200).json({

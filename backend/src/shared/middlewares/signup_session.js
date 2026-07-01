@@ -1,4 +1,4 @@
-import { findSignupSession } from "../../modules/signup_sessions/service.js";
+import { findSignupSession } from "#/modules/signup_sessions/service.js";
 import requireSession from "./session.js";
 
 export default function requireSignupSession() {

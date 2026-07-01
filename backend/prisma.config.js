@@ -1,11 +1,9 @@
 import { defineConfig } from "prisma/config";
-import "dotenv/config";
 
 export default defineConfig({
-    schema: "src/shared/database/schema.prisma",
+    schema: "prisma/schema.prisma",
     migrations: {
-        path: "src/shared/database/migrations",
-        seed: "node src/shared/database/seed.js",
+        path: "prisma/migrations",
     },
     datasource: {
         url: process.env.DB_URL,

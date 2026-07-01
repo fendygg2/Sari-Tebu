@@ -1,10 +1,10 @@
 import { timingSafeEqual } from "node:crypto";
 
-import ClientError from "../../shared/exceptions/client_error.js";
+import ClientError from "#/shared/exceptions/client_error.js";
 import {
     parseSessionToken,
     hashSessionSecret,
-} from "../../shared/lib/session_manager.js";
+} from "#/shared/lib/session_manager.js";
 
 /**
  * Session middleware factory, Gunakan untuk buat sessions middleware e.g. requireSignupSession, requireAuthSession, dll.

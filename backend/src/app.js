@@ -4,7 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 
-import authenticationRoutes from "./modules/auth_sessions/routes.js";
+import authSesssionRoutes from "./modules/auth_sessions/routes.js";
 import cartRoutes from "./modules/carts/routes.js";
 import productRoutes from "./modules/products/routes.js";
 import transactionRoutes from "./modules/transactions/routes.js";
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true, limit: "250kb" }));
 
 app.use("/sign-up", signUpRoutes);
 app.use("/users", userRoutes);
-app.use("/auth", authenticationRoutes);
+app.use("/auth", authSesssionRoutes);
 app.use("/products", productRoutes);
 app.use("/carts", cartRoutes);
 app.use("/transactions", transactionRoutes);

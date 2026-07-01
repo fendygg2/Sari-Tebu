@@ -1,15 +1,13 @@
-import { randomInt } from "node:crypto";
-
-import bcrypt from "bcrypt";
+import { randomInt, createHash } from "node:crypto";
 import { nanoid } from "nanoid";
 
-import { prisma } from "../../shared/database/index.js";
-import ClientError from "../../shared/exceptions/client_error.js";
+import { prisma } from "#/shared/database/index.js";
+import ClientError from "#/shared/exceptions/client_error.js";
 import {
     generateSessionSecret,
     hashSessionSecret,
     createSessionToken,
-} from "../../shared/lib/session_manager.js";
+} from "#/shared/lib/session_manager.js";
 
 export async function createSignupSession(emailAddress) {
     const exists = await prisma.user.findUnique({
@@ -32,13 +30,19 @@ export async function createSignupSession(emailAddress) {
         .toString()
         .padStart(8, "0");
 
+    const hashedVerificationCode = createHash("sha256")
+        .update(verificationCode)
+        .digest("hex");
+
+    const tokenLifetime = new Date(Date.now() + Number(process.env.SESSION_TOKEN_AGE));
     const signupSession = await prisma.signupSession.create({
         data: {
             id: nanoid(),
             email_address: emailAddress,
             session_secret_hash: hashSessionSecret(secret),
-            email_code_hash: await bcrypt.hash(verificationCode, 10),
-            is_email_verified: false
+            email_code_hash: hashedVerificationCode,
+            is_email_verified: false,
+            expires_at: tokenLifetime
         },
     });
 
@@ -52,8 +56,12 @@ export async function findSignupSession(id) {
     });
 }
 
-export async function verifyEmailAddress(signupSession, code) {
-    if (!(await bcrypt.compare(code, signupSession.email_code_hash))) {
+export async function verifyEmailAddress(signupSession, verificationCode) {
+    const hashedVerificationCode = createHash("sha256")
+        .update(verificationCode)
+        .digest("hex");
+
+    if (hashedVerificationCode !== signupSession.email_code_hash) {
         throw ClientError.unprocessable("Invalid verification code.");
     }
 
@@ -68,10 +76,14 @@ export async function refreshVerificationCode(id) {
         .toString()
         .padStart(8, "0");
 
+    const hashedVerificationCode = createHash("sha256")
+        .update(verificationCode)
+        .digest();
+
     await prisma.signupSession.update({
         where: { id: id },
         data: {
-            email_code_hash: await bcrypt.hash(verificationCode, 10),
+            email_code_hash: hashedVerificationCode
         },
     });
 
