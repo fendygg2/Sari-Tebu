@@ -1,7 +1,9 @@
 # Sari Tebu's Backend
 
 > [!IMPORTANT]
-> Proyek ini dibuat untuk tujuan pembelajaran, walaupun disini kami berusaha untuk mengikuti industry standard, kami merekomendasikan anda untuk tidak menggunakan proyek ini sebagai basis untuk production atau membawakan ekspektasi berlebihan terhadap proyek ini.
+> Proyek ini dibuat untuk tujuan pembelajaran. Walaupun kami berusaha mengikuti industry standard, kami 
+> merekomendasikan Anda untuk tidak menggunakan proyek ini sebagai basis production, atau
+> membawakan ekspektasi berlebihan terhadap proyek ini untuk saat ini
 
 Sari Tebu merupakan aplikasi POS (*Point of Sale*) berbasis web. Frontend akan di render sisi klien (*Client-Side Rendering* / CSR) dikarenakan ini merupakan aplikasi *dashboard*, di mana SEO (*Search Engine Optimization*) tidak berperan penting.
 

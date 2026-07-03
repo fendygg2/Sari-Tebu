@@ -2,8 +2,8 @@
 
 > [!IMPORTANT]
 > Proyek ini dibuat untuk tujuan pembelajaran. Walaupun kami berusaha mengikuti industry standard, kami 
-> merekomendasikan Anda untuk **tidak** menggunakan proyek ini sebagai basis production, atau
-> membawakan ekspektasi berlebihan terhadap proyek ini untuk **SAAT INI**
+> merekomendasikan Anda untuk tidak menggunakan proyek ini sebagai basis production, atau
+> membawakan ekspektasi berlebihan terhadap proyek ini untuk saat ini
 
 | Git | Cloudflare | Caddy | Fedora | Digital Ocean Droplet | Docker |
 |:---:|:----------:|:-----:|:------:|:---------------------:|:------:|
