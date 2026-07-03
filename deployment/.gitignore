@@ -1,2 +1,6 @@
 *.log
 *.lock
+.env
+.env.prod
+.env.*
+!.env.example

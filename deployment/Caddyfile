@@ -1,40 +1,30 @@
-# The Caddyfile is an easy way to configure your Caddy web server.
-#
 # https://caddyserver.com/docs/caddyfile
-
-
-# The configuration below serves a welcome page over HTTP on port 80.  To use
-# your own domain name with automatic HTTPS, ensure your A/AAAA DNS record is
-# pointing to this machine's public IP, then replace `http://` with your domain
-# name.  Refer to the documentation for full instructions on the address
-# specification.
 #
-# https://caddyserver.com/docs/caddyfile/concepts#addresses
-http:// {
+# Caddyfile ini identical, baik dijalankan dari Cloudflare Tunnel (Tanpa public IP) e.g. home server
+# maupun secara langsung pada host dengan public IP e.g. DigitalOcean Droplet.
+#
+# SSL/TLS Certification nya diperoleh melalui tantangan DNS-01 melalui API cloudflare
+# yang tidak memerlukan akses masuk (inbound) kepada machine sehinnga 
+# cara kerjanya tetap sama di kedua Environment tersebut.
 
-    # Set this path to your site's directory.
-    root * /usr/share/caddy
-
-    # Enable the static file server.
-    file_server
-
-    # Another common task is to set up a reverse proxy:
-    # reverse_proxy localhost:8080
-
-    # Or serve a PHP site through php-fpm:
-    # Or serve a PHP site through php-fpm:
-    # php_fastcgi localhost:9000
-
-    # Refer to the directive documentation for more options.
-    # https://caddyserver.com/docs/caddyfile/directives
-
+# Optional, namun tanpa ini jika ada yang salah tidak akan dapat notifikasi dari Let's Encrypt
+{
+    email {$ACME_EMAIL}
 }
 
-http://api.aelberthcheong.dev {
+api.aelberthcheong.dev {
+    tls {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+    }
     reverse_proxy server:8080
 }
 
-# As an alternative to editing the above site block, you can add your own site
-# block files in the Caddyfile.d directory, and they will be included as long
-# as they use the .caddyfile extension.
+saritebu.aelberthcheong.dev {
+    tls {
+        dns cloudflare {$CLOUDFLARE_API_TOKEN}
+    }
+    reverse_proxy frontend:5173
+}
+
 import Caddyfile.d/*.caddyfile
+

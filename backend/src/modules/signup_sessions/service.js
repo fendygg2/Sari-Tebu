@@ -78,7 +78,7 @@ export async function refreshVerificationCode(id) {
 
     const hashedVerificationCode = createHash("sha256")
         .update(verificationCode)
-        .digest();
+        .digest("hex");
 
     await prisma.signupSession.update({
         where: { id: id },

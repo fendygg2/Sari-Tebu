@@ -32,12 +32,6 @@ export async function createUser({ emailAddress, username, password }) {
     }
 }
 
-/**
- * Dapatkan detail user berdasarkan id
- * @param {string} id
- * @returns {Promise<PublicUserField>}
- * @throws {ClientError}
- */
 export async function getUserById(id) {
     const user = await prisma.user.findUnique({
         where: { id: id },
@@ -49,11 +43,6 @@ export async function getUserById(id) {
     return user;
 }
 
-/**
- * Dapatkan user(s) berdasarkan email
- * @param {string} emailAddress
- * @returns {Promise<PublicUserField[]>}
- */
 export async function getUsers(emailAddress = "") {
     return await prisma.user.findMany({
         where: {
@@ -63,13 +52,6 @@ export async function getUsers(emailAddress = "") {
     });
 }
 
-/**
- * Memperbarui data user berdasarkan id
- * @param {string} id
- * @param {{ username?: string, emailAddress?: string }} payload
- * @returns {Promise<PublicUserField>}
- * @throws {ClientError}
- */
 export async function updateUser(id, payload) {
     try {
         return await prisma.user.update({
@@ -88,12 +70,6 @@ export async function updateUser(id, payload) {
     }
 }
 
-/**
- * Hapus user berdasarkan id
- * @param {string} id
- * @returns {Promise<void>}
- * @throws {ClientError}
- */
 export async function deleteUser(id) {
     try {
         await prisma.user.delete({
@@ -105,3 +81,48 @@ export async function deleteUser(id) {
         throw err;
     }
 }
+
+// TODO: USER PASSWORD
+// async function verifyUserPasswordStrength(password) {
+//     const passwordHash = crypto
+//         .createHash("sha1")
+//         .update(password)
+//         .digest("hex");
+
+//     const hashPrefix = passwordHash.slice(0, 5);
+//     const url = `https://api.pwnedpasswords.com/range/${hashPrefix}`;
+    
+//     const res = await fetch(url);
+//     if (!res.ok) {
+//         throw new Error(`Received status code ${res.status}`);
+//     }
+
+//     const lines = await res.text();
+//     for (const line of lines.split("\n")) {
+//         const hashSuffix = line.slice(0, 35).toLowerCase();
+//         if (passwordHash === hashPrefix + hashSuffix) {
+//             return false;
+//         }
+//     }
+
+//     return true;
+// }
+
+// function verifyUserPasswordPattern(password) {
+//       if (password.length < 10 || password.length > 100) {
+//             return false;
+//       }
+
+//       for (const char of password) {
+//             const code = char.charCodeAt(0);
+//             if (code < 0x20 || code > 0x7e) {
+//                 return false;
+//             }
+//       }
+
+//       if (password[0] === " " || password[password.length - 1] === " ") {
+//             return false;
+//       }
+
+//       return true;
+// }

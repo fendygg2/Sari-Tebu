@@ -1,7 +1,7 @@
 name: sari-tebu-production
 services:
     # NOTE: karena database hanya dapat berkomukasi antar container lain,
-    #       membiarkan nya sebagai root cukup aman
+    #       membiarkan nya sebagai root sudah cukup aman.
     database:
         image: mysql:8.4
         container_name: sari-tebu-database
@@ -25,7 +25,7 @@ services:
         env_file:
             - ../backend/.env.prod
         expose:
-            - "${PORT:-8080}"
+            - "8080"
         depends_on:
             database:
                 condition: service_healthy
@@ -38,19 +38,29 @@ services:
         env_file:
             - ../frontend/.env.prod
         expose:
-            - "${PORT:-5173}"
+            - "5173"
     
     caddy:
-        image: caddy:alpine
+        build:
+            context: .
+            dockerfile: Dockerfile
         container_name: sari-tebu-reverse-proxy
         restart: unless-stopped
         ports:
             - "80:80"
+            - "443:443"
+            - "443:443/udp"
+        env_file:
+            - ./.env.prod
         volumes:
             - ./Caddyfile:/etc/caddy/Caddyfile:ro
+            - caddy_data:/data
+            - caddy_config:/config
         depends_on:
             - server
             - frontend
 
 volumes:
     mysql_data:
+    caddy_data:
+    caddy_config:

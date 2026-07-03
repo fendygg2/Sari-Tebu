@@ -8,12 +8,6 @@ export async function createUser(req, res) {
     });
 }
 
-/**
- * @param {Request} req
- * @param {Response} res
- * @type {import("express").RequestHandler}
- * @returns {Promise<void>}
- */
 export async function getUsers(req, res) {
     const { email_address } = req.validatedQuery ?? {};
     const users = await UserService.getUsers(email_address);
@@ -23,12 +17,6 @@ export async function getUsers(req, res) {
     });
 }
 
-/**
- * @param {Request} req
- * @param {Response} res
- * @type {import("express").RequestHandler}
- * @returns {Promise<void>}
- */
 export async function getUserById(req, res) {
     const user = await UserService.getUserById(req.validatedParams.id);
     res.status(200).json({
@@ -54,12 +42,6 @@ export async function updateUser(req, res) {
     });
 }
 
-/**
- * @param {Request} req
- * @param {Response} res
- * @type {import("express").RequestHandler}
- * @returns {Promise<void>}
- */
 export async function editUser(req, res) {
     const user = await UserService.updateUser(
         req.validatedParams.id,
@@ -71,12 +53,6 @@ export async function editUser(req, res) {
     });
 }
 
-/**
- * @param {Request} req
- * @param {Response} res
- * @type {import("express").RequestHandler}
- * @returns {Promise<void>}
- */
 export async function deleteUser(req, res) {
     await UserService.deleteUser(req.validatedParams.id);
     res.status(200).json({
