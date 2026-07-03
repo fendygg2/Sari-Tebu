@@ -10,9 +10,9 @@ Sari Tebu merupakan aplikasi POS (*Point of Sale*) berbasis web. Frontend akan d
 <!-- TODO: Tambah detail mengenai frontend dan deployment 
  -->
 
-Instruksi untuk backend   : [](./backend/readme.md) <br />
-Instruksi untuk frontend  : [](./frontend/readme.md) <br />
-Instruksi untuk deployment: [](./deployment/readme.md) <br />
+Instruksi untuk backend   : [README.md](./backend/readme.md) <br />
+Instruksi untuk frontend  : [README.md](./frontend/readme.md) <br />
+Instruksi untuk deployment: [README.md](./deployment/readme.md) <br />
 Video demo proyek [Video demo proyek] (https://drive.google.com/file/d/1D9WIMK-e33bKClgW-uAOfCWOIG8EgrH2/view?usp=drivesdk)
 
 <!-- NOTE: Tambahkan sumber-sumber lainnya yang terkait dengan proyek disini 
