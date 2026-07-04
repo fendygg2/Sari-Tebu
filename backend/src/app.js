@@ -26,7 +26,7 @@ app.use(helmet());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 app.use(express.json({ limit: "250kb" }));
 app.use(express.urlencoded({ extended: true, limit: "250kb" }));
-app.use(requireApiDocumentation());
+app.use("/api", requireApiDocumentation());
 
 app.use("/api/sign-up", signUpRoutes);
 app.use("/api/auth", authSesssionRoutes);
