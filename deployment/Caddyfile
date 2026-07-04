@@ -12,7 +12,7 @@
     email {$ACME_EMAIL}
 }
 
-saritebu.aelberthcheong.dev {
+*.kelompoka.tech {
     tls {
         dns cloudflare {$CLOUDFLARE_API_TOKEN}
     }

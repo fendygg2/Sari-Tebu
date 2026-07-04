@@ -49,7 +49,7 @@ export async function updateItem(req, res) {
     const { quantity } = req.validatedBody;
     const item = await CartService.updateItem(
         req.params.cartId,
-        req.parmas.productId,
+        req.params.productId,
         quantity,
     );
     res.status(200).json({
