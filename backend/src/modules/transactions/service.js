@@ -1,5 +1,4 @@
 import { nanoid } from "nanoid";
-
 import { prisma } from "#/shared/database/index.js";
 import ClientError from "#/shared/exceptions/client_error.js";
 
@@ -8,8 +7,9 @@ export async function checkout(cartId, userId) {
         where: { id: cartId },
         include: { items: { include: { product: true } } },
     });
-
-    if (!cart) throw ClientError.notFound("Cart tidak ditemukan");
+    if (!cart || cart.user_id !== userId) {
+        throw ClientError.notFound("Cart tidak ditemukan");
+    }
     if (cart.items.length === 0) throw ClientError.badRequest("Cart is empty");
 
     for (const item of cart.items) {
@@ -49,23 +49,27 @@ export async function checkout(cartId, userId) {
             ),
         );
 
-        await tx.cart.delete({ where: { id: cart_id } });
+        await tx.cart.delete({ where: { id: cart.id } });
+
         return transaction;
     });
 }
 
-export async function listTransactions() {
+export async function listTransactions(userId) {
     return prisma.transaction.findMany({
+        where: { user_id: userId },
         include: { items: { include: { product: true } } },
         orderBy: { created_at: "desc" },
     });
 }
 
-export async function getTransaction(transactionId) {
+export async function getTransaction(transactionId, userId) {
     const transaction = await prisma.transaction.findUnique({
         where: { id: transactionId },
         include: { items: { include: { product: true } } },
     });
-    if (!transaction) throw ClientError.notFound("Transaction tidak ditemukan");
+    if (!transaction || transaction.user_id !== userId) {
+        throw ClientError.notFound("Transaction tidak ditemukan");
+    }
     return transaction;
 }

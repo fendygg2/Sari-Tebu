@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { AuthSplitLayout } from "#/layouts/AuthSplitLayout";
+import { useAuth } from "#/context/AuthContext.jsx";
 
 function StepEmail({ onNext, onNavigateToLogin }) {
     const [email, setEmail] = useState("");
@@ -304,6 +305,7 @@ function StepPassword({ email, onComplete }) {
 // =========================================================================
 export default function SignUp() {
     const navigate = useNavigate();
+    const { refresh } = useAuth();
     const [step, setStep] = useState(1); 
     const [email, setEmail] = useState("");
     const [pageSkeleton, setPageSkeleton] = useState(true);
@@ -352,7 +354,10 @@ export default function SignUp() {
             {step === 3 && (
                 <StepPassword 
                     email={email}
-                    onComplete={() => navigate("/dashboard")} 
+                    onComplete={async () => {
+                        await refresh();
+                        navigate("/pos");
+                    }} 
                 />
             )}
         </AuthSplitLayout>

@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 
-export default function RequireAuth({ children }) {
-    const [status, setStatus] = useState("loading");
+import { useAuth } from "#/context/AuthContext.jsx";
 
-    useEffect(() => {
-        fetch("/api/auth", { credentials: "include" })
-            .then((res) => setStatus(res.ok ? "auth" : "unauth"))
-            .catch(() => setStatus("unauth"));
-    }, []);
+export default function RequireAuth({ children }) {
+    const { status } = useAuth();
 
     if (status === "loading") return null;
     if (status === "unauth") return <Navigate to="/login" replace />;

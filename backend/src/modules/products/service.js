@@ -13,7 +13,7 @@ import ClientError from "#/shared/exceptions/client_error.js";
  */
 export async function getProducts(name = "") {
     return prisma.product.findMany({
-        where: { name: { contains: name, mode: "insensitive" } },
+        where: { name: { contains: name } },
     });
 }
 

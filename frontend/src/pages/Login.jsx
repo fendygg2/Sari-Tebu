@@ -10,9 +10,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { AuthSplitLayout } from "#/layouts/AuthSplitLayout";
+import { useAuth } from "#/context/AuthContext.jsx";
 
 export default function Login() {
     const navigate = useNavigate();
+    const { refresh } = useAuth();
 
     // --- 1. SKELETON STATE ---
     const [pageLoading, setPageLoading] = useState(true);
@@ -51,7 +53,8 @@ export default function Login() {
 
             if (res.ok) {
                 setIsSuccess(true);
-                setTimeout(() => navigate("/dashboard"), 1000);
+                await refresh();
+                setTimeout(() => navigate("/pos"), 1000);
             } else {
                 const data = await res.json().catch(() => ({}));
                 setErrorMessage(data.message || "Wrong Email or Password");
@@ -71,7 +74,7 @@ export default function Login() {
             {isSuccess ? (
                 <EmptyState
                     title="You're signed in"
-                    description="Redirecting to your dashboard…"
+                    description="Mengarahkan ke dashboard kasir…"
                     icon={<Icon icon={CheckCircleIcon} size="lg" />}
                 />
             ) : (
