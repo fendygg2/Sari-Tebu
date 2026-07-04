@@ -5,7 +5,7 @@ export default function RequireAuth({ children }) {
     const [status, setStatus] = useState("loading");
 
     useEffect(() => {
-        fetch("/api/auth-sessions", { credentials: "include" })
+        fetch("/api/auth", { credentials: "include" })
             .then((res) => setStatus(res.ok ? "auth" : "unauth"))
             .catch(() => setStatus("unauth"));
     }, []);

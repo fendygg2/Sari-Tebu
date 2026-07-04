@@ -1,15 +1,15 @@
 import { Theme } from "@astryxdesign/core/theme";
-import { neutralTheme } from "@astryxdesign/theme-neutral/built";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App.jsx";
+import { theme } from "./theme.js";
 
 import "./main.css";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <Theme theme={neutralTheme}>
+        <Theme theme={theme} mode="light">
             <App />
         </Theme>
     </StrictMode>,

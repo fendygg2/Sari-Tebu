@@ -8,59 +8,59 @@ import { useNavigate } from "react-router";
 
 import { AuthSplitLayout } from "#/layouts/AuthSplitLayout";
 
-function StepEmail({ onNext, onNavigateToLogin }) {
+function StepRequestEmail({ onNext, onNavigateToLogin }) {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevents page reload on form submit
+        e.preventDefault();
         if (!email) {
-            setError("Please enter a valid email address");
+            setError("Please enter your email address");
             return;
         }
         setIsLoading(true);
         setError(null);
 
         try {
-            const res = await fetch("/api/sign-up", {
+            const res = await fetch("/api/reset-password", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ emailAddress: email }),
             });
 
-            const data = await res.json().catch(() => ({}));
-
+            // Always returns 201 success to prevent user enumeration
             if (res.ok) {
                 onNext(email);
             } else {
-                setError(data.message || "Failed to send verification code.");
+                const data = await res.json().catch(() => ({}));
+                setError(data.message || "Something went wrong.");
             }
         } catch {
-            setError("Something went wrong. Please try again.");
+            setError("Failed to contact server. Please try again.");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        /* Wrapping in a form handles native inputs history and Enter key functionality */
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
             <VStack gap={4} hAlign="stretch" width="100%">
                 <VStack gap={1}>
-                    <Text type="display-1" as="h2">Create an account</Text>
+                    <Text type="display-1" as="h2">Reset Password</Text>
                     <Text type="body" color="secondary" size="sm">
-                        Enter your email to get started.
+                        Enter your email address to receive a verification code.
                     </Text>
                 </VStack>
-                
+
                 <TextInput
                     label="Email Address"
-                    placeholder="john@example.com"
+                    placeholder="your.name@example.com"
                     size="lg"
                     type="email"
-                    name="email" /* Enables autocomplete history tracking */
+                    name="email"
+                    autocomplete="username email"
                     value={email}
                     onChange={(val) => {
                         setEmail(val);
@@ -69,25 +69,18 @@ function StepEmail({ onNext, onNavigateToLogin }) {
                     status={error ? { type: "error", message: error } : undefined}
                 />
 
-                {/* type="submit" binds the Enter key to the submit handler natively */}
-                <Button 
-                    label="Continue" 
-                    variant="primary" 
-                    size="lg" 
-                    isLoading={isLoading} 
-                    type="submit" 
-                />
+                <Button label="Send Code" variant="primary" size="lg" isLoading={isLoading} type="submit" />
 
                 <Text type="supporting" color="secondary">
-                    Have an account?{" "}
-                    <Link onClick={onNavigateToLogin} type="supporting">Login</Link>
+                    Remember your password?{" "}
+                    <Link onClick={onNavigateToLogin} type="supporting">Back to Login</Link>
                 </Text>
             </VStack>
         </form>
     );
 }
 
-function StepVerify({ email, onNext, onCancel }) {
+function StepVerifyCode({ email, onNext, onCancel }) {
     const [code, setCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isResending, setIsResending] = useState(false);
@@ -105,14 +98,14 @@ function StepVerify({ email, onNext, onCancel }) {
         setSuccessMessage(null);
 
         try {
-            const res = await fetch("/api/sign-up/verify-email-address", {
+            const res = await fetch("/api/reset-password/verify-email-address", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
                     code: code
-                        .trim()
-                        .replace(/-/g, "")
+                        .trim() 
+                        .replace(/-/g, '')
                 }),
             });
 
@@ -121,10 +114,10 @@ function StepVerify({ email, onNext, onCancel }) {
             if (res.ok) {
                 onNext();
             } else {
-                setError(data.message || "Invalid or expired verification code.");
+                setError(data.message || "Invalid or expired code.");
             }
         } catch {
-            setError("Something went wrong. Please try again.");
+            setError("Something went wrong.");
         } finally {
             setIsLoading(false);
         }
@@ -136,19 +129,19 @@ function StepVerify({ email, onNext, onCancel }) {
         setSuccessMessage(null);
 
         try {
-            const res = await fetch("/api/sign-up/resend-verification-code", {
+            const res = await fetch("/api/reset-password/resend-verification-code", {
                 method: "POST",
                 credentials: "include",
             });
             const data = await res.json().catch(() => ({}));
 
             if (res.ok) {
-                setSuccessMessage("Verification code resent successfully!");
+                setSuccessMessage("A new verification code has been sent!");
             } else {
-                setError(data.message || "Failed to resend code. Try again later.");
+                setError(data.message || "Failed to resend code.");
             }
         } catch {
-            setError("Failed to reach server. Try again later.");
+            setError("Failed to connect to server.");
         } finally {
             setIsResending(false);
         }
@@ -158,17 +151,17 @@ function StepVerify({ email, onNext, onCancel }) {
         <form onSubmit={handleVerify} style={{ width: "100%" }}>
             <VStack gap={4} hAlign="stretch" width="100%">
                 <VStack gap={1}>
-                    <Text type="display-1" as="h2">Verify your email</Text>
+                    <Text type="display-1" as="h2">Verify Identity</Text>
                     <Text type="body" color="secondary" size="sm">
-                        We sent an 8-digit verification code to <strong>{email}</strong>.
+                        If <strong>{email}</strong> matches an account, an 8-digit code has been sent.
                     </Text>
                 </VStack>
 
                 <TextInput
-                    label="Verification Code (hyphens and spaces are optional)"
-                    placeholder="Enter verification code"
+                    label="Verification Code"
+                    placeholder="Enter 8-digit code"
                     size="lg"
-                    name="one-time-code" /* Tells password managers this is an OTP */
+                    name="one-time-code"
                     value={code}
                     onChange={(val) => {
                         setCode(val);
@@ -180,13 +173,7 @@ function StepVerify({ email, onNext, onCancel }) {
                     }
                 />
 
-                <Button 
-                    label="Verify Email" 
-                    variant="primary" 
-                    size="lg" 
-                    isLoading={isLoading} 
-                    type="submit" 
-                />
+                <Button label="Verify Code" variant="primary" size="lg" isLoading={isLoading} type="submit" />
 
                 <VStack gap={2} hAlign="stretch">
                     <Link onClick={handleResend} disabled={isResending} size="sm" type="supporting">
@@ -201,34 +188,26 @@ function StepVerify({ email, onNext, onCancel }) {
     );
 }
 
-function StepPassword({ email, onComplete }) {
-    const [username, setUsername] = useState("");
+function StepUpdatePassword({ email, onComplete }) {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const handleFinalize = async (e) => {
+    const handlePatch = async (e) => {
         e.preventDefault();
-        
-        // Front-end matches Joi schema validation sizes
-        if (username.length < 3 || username.length > 30) {
-            setError("Username must be between 3 and 30 characters long");
-            return;
-        }
-        if (password.length < 8 || password.length > 100) {
-            setError("Password must be between 8 and 100 characters long");
+        if (password.length < 10 || password.length > 100) {
+            setError("Password must be between 10 and 100 characters long");
             return;
         }
         setIsLoading(true);
         setError(null);
 
         try {
-            // Hits the register route inside authSession controller
-            const res = await fetch("/api/auth/register", {
-                method: "POST",
+            const res = await fetch("/api/reset-password", {
+                method: "PATCH",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ password }),
             });
 
             const data = await res.json().catch(() => ({}));
@@ -236,49 +215,35 @@ function StepPassword({ email, onComplete }) {
             if (res.ok) {
                 onComplete();
             } else {
-                setError(data.message || "Registration failed. Try checking your entries.");
+                setError(data.message || "Failed to update password.");
             }
         } catch {
-            setError("Something went wrong. Please try again.");
+            setError("Something went wrong.");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <form onSubmit={handleFinalize} style={{ width: "100%" }}>
-            {/* CRITICAL: Tell password managers that this hidden email is the main login key */}
+        <form onSubmit={handlePatch} style={{ width: "100%" }}>
+            {/* Helps browsers automatically match this update back to the stored password login record */}
             <input type="hidden" name="email" value={email} autoComplete="username" />
-            
+
             <VStack gap={4} hAlign="stretch" width="100%">
                 <VStack gap={1}>
-                    <Text type="display-1" as="h2">Set details</Text>
+                    <Text type="display-1" as="h2">New Password</Text>
                     <Text type="body" color="secondary" size="sm">
-                        Choose your distinct identity profile credentials.
+                        Please set your strong, updated account password entry.
                     </Text>
                 </VStack>
 
                 <TextInput
-                    label="Username"
-                    type="text"
-                    placeholder="johndoe"
-                    size="lg"
-                    name="username"
-                    autocomplete="nickname" /* Changes from "username" to "nickname" so password managers ignore it */
-                    value={username}
-                    onChange={(val) => {
-                        setUsername(val);
-                        setError(null);
-                    }}
-                />
-
-                <TextInput
-                    label="Password"
+                    label="New Password"
                     type="password"
-                    placeholder="Enter password"
+                    placeholder="Enter new password"
                     size="lg"
-                    name="new-password"
-                    autocomplete="new-password" /* Prompts a secure "Save Password" box paired to the hidden email input above */
+                    name="password"
+                    autocomplete="new-password"
                     value={password}
                     onChange={(val) => {
                         setPassword(val);
@@ -287,24 +252,15 @@ function StepPassword({ email, onComplete }) {
                     status={error ? { type: "error", message: error } : undefined}
                 />
 
-                <Button 
-                    label="Create Account" 
-                    variant="primary" 
-                    size="lg" 
-                    isLoading={isLoading} 
-                    type="submit" 
-                />
+                <Button label="Save and Login" variant="primary" size="lg" isLoading={isLoading} type="submit" />
             </VStack>
         </form>
     );
 }
 
-// =========================================================================
-// MAIN ENTRY: Stage Routing Coordinator
-// =========================================================================
-export default function SignUp() {
+export default function ResetPassword() {
     const navigate = useNavigate();
-    const [step, setStep] = useState(1); 
+    const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
     const [pageSkeleton, setPageSkeleton] = useState(true);
 
@@ -313,12 +269,12 @@ export default function SignUp() {
         return () => clearTimeout(timer);
     }, []);
 
-    const handleCancelSignup = async () => {
+    const handleCancelReset = async () => {
         setPageSkeleton(true);
         try {
-            await fetch("/api/sign-up", { method: "DELETE", credentials: "include" });
+            await fetch("/api/reset-password", { method: "DELETE", credentials: "include" });
         } catch (e) {
-            console.error("Failed to cancel active registration session cleanly.", e);
+            console.error("Failed to drop reset session token cookie cleanly.", e);
         }
         setEmail("");
         setStep(1);
@@ -337,22 +293,22 @@ export default function SignUp() {
     return (
         <AuthSplitLayout isLoading={pageSkeleton}>
             {step === 1 && (
-                <StepEmail 
+                <StepRequestEmail 
                     onNext={(validEmail) => transitionToStep(2, validEmail)} 
                     onNavigateToLogin={() => navigate("/login")} 
                 />
             )}
             {step === 2 && (
-                <StepVerify 
+                <StepVerifyCode 
                     email={email} 
                     onNext={() => transitionToStep(3)} 
-                    onCancel={handleCancelSignup} 
+                    onCancel={handleCancelReset} 
                 />
             )}
             {step === 3 && (
-                <StepPassword 
+                <StepUpdatePassword 
                     email={email}
-                    onComplete={() => navigate("/dashboard")} 
+                    onComplete={() => navigate("/login")} /* Correct direction per backend session destruction */
                 />
             )}
         </AuthSplitLayout>
